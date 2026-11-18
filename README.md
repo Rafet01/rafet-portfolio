@@ -84,6 +84,22 @@ When Rafet confirms the start:
 
 Docs: [Astro on GitHub Pages](https://docs.astro.build/en/guides/deploy/github/), [Managing a custom domain](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site).
 
+### Netlify (current live site)
+
+Live at **https://rafet-myumyun.netlify.app/**, uploaded by hand with Netlify Drop. The GitHub Actions deploy is on hold while the GitHub account has a billing lock.
+
+To publish an update:
+
+```powershell
+$env:BASE_PATH='/'; $env:SITE_ORIGIN='https://rafet-myumyun.netlify.app'; npm run build
+```
+```powershell
+Remove-Item -Recurse -Force netlify-upload; Copy-Item -Recurse dist netlify-upload
+```
+
+Then, in Netlify: the site → **Deploys** → drag the `netlify-upload` folder onto the "Drag and drop your site output folder here" area.
+Keep **Site configuration → Access & security → Visitor access** set to no protection, or visitors get a Netlify login page.
+
 ### Vercel alternative
 
 Use the same tested `dist/`: build in GitHub Actions with `BASE_PATH=/` and `SITE_ORIGIN=https://<production-domain>` (Chromium is reliable there), then deploy `dist/` as a static output (e.g. `vercel deploy --prebuilt` or Vercel's static preset). See [Astro on Vercel](https://docs.astro.build/en/guides/deploy/vercel/).
