@@ -1,0 +1,24 @@
+---
+/**
+ * Author-facing list of missing facts. Rendered only in `astro dev`; never in a production build.
+ */
+interface Props {
+  items: string[];
+  title?: string;
+}
+const { items, title = 'Author checklist (dev only, not published)' } = Astro.props;
+const show = import.meta.env.DEV && items.length > 0;
+---
+
+{
+  show && (
+    <aside class="author-notes" aria-label="Author checklist">
+      <h2>{title}</h2>
+      <ul>
+        {items.map((i) => (
+          <li>{i}</li>
+        ))}
+      </ul>
+    </aside>
+  )
+}

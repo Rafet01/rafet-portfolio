@@ -1,0 +1,35 @@
+---
+import { publicContacts } from '../lib/data';
+import { withBase, CV_PDF_PATH, CV_PDF_FILENAME } from '../lib/url';
+
+interface Props {
+  /** Include the PDF download row (home contact section). */
+  includeCv?: boolean;
+}
+const { includeCv = true } = Astro.props;
+const contacts = publicContacts();
+---
+
+<ul class="contact-list">
+  {
+    contacts.map((c) => (
+      <li>
+        <span class="label">{c.label}</span>
+        <a href={c.href} rel={c.kind === 'email' ? undefined : 'me noopener'}>
+          {c.text}
+        </a>
+      </li>
+    ))
+  }
+  {
+    includeCv && (
+      <li>
+        <span class="label">CV</span>
+        <a href={withBase(CV_PDF_PATH)} download={CV_PDF_FILENAME}>
+          Download CV (PDF)
+        </a>
+        <a href={withBase('cv/')}>Read the web CV</a>
+      </li>
+    )
+  }
+</ul>

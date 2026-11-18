@@ -1,0 +1,112 @@
+{
+  "identity": {
+    "name": "Rafet Myumyun",
+    "headline": "Final-year Applied Computer Science student focused on data engineering.",
+    "lead": "I’ve worked with Power BI, SQL and SAP."
+  },
+  "summary": "Final-year Applied Computer Science (IT & Business) student at AP Hogeschool Antwerpen, focused on data engineering. I’ve worked with Power BI, SQL and SAP/ERP, and I was scrum master on a team-built client QA dashboard.",
+  "about": [
+    "I study Applied Computer Science in the IT & Business programme at AP Hogeschool Antwerpen, where I’m in my final year. The programme combines software development with how businesses run their processes and data.",
+    "What interests me most is how data reaches a report: where it comes from, how it is checked, and how it ends up in front of the people who use it. That is why I’m focusing on data engineering."
+  ],
+  "contacts": {
+    "email": null,
+    "linkedin": null,
+    "github": null
+  },
+  "education": [
+    {
+      "school": "AP Hogeschool Antwerpen",
+      "programme": "Applied Computer Science (IT & Business)",
+      "note": "Final year",
+      "start": null,
+      "end": null,
+      "status": "current",
+      "missing": [
+        "Confirm an official English name for the school, or keep “AP Hogeschool Antwerpen”.",
+        "Add start year and expected graduation year."
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "id": "data-engineering-internship",
+      "organisation": null,
+      "role": "Data engineering internship",
+      "location": "the Netherlands",
+      "status": "upcoming",
+      "start": "2027-02",
+      "end": null,
+      "contribution": [],
+      "projects": [],
+      "missing": [
+        "Confirm the start date before publishing updated tense (February 2027).",
+        "Add the employer name if Rafet wants it public."
+      ]
+    },
+    {
+      "id": "christelijke-mutualiteit-internship",
+      "organisation": "Christelijke Mutualiteit",
+      "role": "Intern",
+      "location": null,
+      "status": "completed",
+      "start": null,
+      "end": null,
+      "contribution": [
+        "I used Power BI and worked with APIs."
+      ],
+      "projects": ["cm-power-bi-api"],
+      "missing": [
+        "Add internship dates (year-month or year).",
+        "Confirm the exact role title."
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "analytics",
+      "label": "Data and analytics",
+      "items": ["Power BI", "SQL", "PostgreSQL", "Working with APIs"],
+      "projects": ["cm-power-bi-api", "vlotterqa"]
+    },
+    {
+      "id": "software",
+      "label": "Software development",
+      "items": ["Flutter", "NestJS"],
+      "projects": ["vlotterqa"]
+    },
+    {
+      "id": "erp",
+      "label": "SAP and ERP",
+      "items": ["SAP CAP", "SAP BTP", "SAP Fiori", "RAP", "ABAP", "SAPUI5", "SAP Build Process Automation"],
+      "projects": ["flexso-sap-cap", "sap-fiori-rap", "sap-abap-ui5", "sap-build-process-automation"]
+    },
+    {
+      "id": "ways-of-working",
+      "label": "Ways of working",
+      "items": ["Scrum (scrum master)", "Team-based client projects"],
+      "projects": ["vlotterqa"]
+    }
+  ],
+  "interests": ["Artificial intelligence"],
+  "languages": [
+    { "name": "Dutch", "level": null },
+    { "name": "Turkish", "level": null },
+    { "name": "English", "level": null },
+    { "name": "Bulgarian", "level": null }
+  ],
+  "selectedProjects": ["vlotterqa", "cm-power-bi-api", "flexso-sap-cap"],
+  "editorial": {
+    "reminders": [
+      {
+        "due": "2027-02",
+        "experienceId": "data-engineering-internship",
+        "note": "February 2027: Rafet confirms the internship has started, then change status to \"current\" and update the home-page support sentence to present tense."
+      }
+    ],
+    "launchBlockers": [
+      "Fill and verify contacts.email, contacts.linkedin and contacts.github.",
+      "Confirm the production origin and base (GitHub repository name, or custom domain)."
+    ]
+  }
+}

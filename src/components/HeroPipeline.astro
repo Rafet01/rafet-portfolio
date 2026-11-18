@@ -1,0 +1,142 @@
+---
+/**
+ * Illustrative "Source → Validate → Report" diagram.
+ * Complete and readable as a static image. Under prefers-reduced-motion: no-preference,
+ * one mint record travels along the connector once (1.6 s, ease-out) using CSS transform/opacity.
+ */
+---
+
+<figure class="pipeline">
+  <svg
+    viewBox="0 0 560 210"
+    width="560"
+    height="210"
+    role="img"
+    aria-labelledby="pipeline-title pipeline-desc"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <title id="pipeline-title">Source, validate, report</title>
+    <desc id="pipeline-desc">
+      A simple three-stage diagram. Stage one, Source, holds three outlined records. Stage two, Validate, shows a check
+      mark. Stage three, Report, shows three horizontal bars. A line connects the stages from left to right, and one
+      record moves along it into the report stage.
+    </desc>
+
+    <!-- Connector (behind the stages) -->
+    <line class="p-connector" x1="136" y1="85" x2="424" y2="85" />
+    <path class="p-arrow" d="M412 78 L424 85 L412 92" />
+    <path class="p-arrow" d="M208 78 L220 85 L208 92" />
+
+    <!-- The moving record. Its resting position (also the static and reduced-motion position) is at the Report entrance. -->
+    <rect class="p-record" x="372" y="78" width="34" height="14" rx="3" />
+
+    <!-- Stage 1: Source -->
+    <g class="p-stage">
+      <rect class="p-box" x="16" y="30" width="120" height="110" rx="8" />
+      <rect class="p-item" x="36" y="50" width="80" height="14" rx="3" />
+      <rect class="p-item" x="36" y="78" width="80" height="14" rx="3" />
+      <rect class="p-item" x="36" y="106" width="80" height="14" rx="3" />
+      <text class="p-label" x="76" y="176" text-anchor="middle">Source</text>
+    </g>
+
+    <!-- Stage 2: Validate -->
+    <g class="p-stage">
+      <rect class="p-box" x="220" y="30" width="120" height="110" rx="8" />
+      <path class="p-check" d="M252 87 L272 107 L310 63" />
+      <text class="p-label" x="280" y="176" text-anchor="middle">Validate</text>
+    </g>
+
+    <!-- Stage 3: Report -->
+    <g class="p-stage">
+      <rect class="p-box" x="424" y="30" width="120" height="110" rx="8" />
+      <rect class="p-bar" x="444" y="56" width="80" height="12" rx="2" />
+      <rect class="p-bar" x="444" y="79" width="54" height="12" rx="2" />
+      <rect class="p-bar" x="444" y="102" width="68" height="12" rx="2" />
+      <text class="p-label" x="484" y="176" text-anchor="middle">Report</text>
+    </g>
+  </svg>
+  <figcaption class="muted">Illustration of the general idea: data moves from a source, is validated, then reaches a report. Not a client architecture.</figcaption>
+</figure>
+
+<style>
+  .pipeline {
+    margin: 0;
+  }
+  .pipeline svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 180px;
+  }
+  @media (min-width: 760px) {
+    .pipeline svg {
+      max-height: none;
+    }
+  }
+  .pipeline figcaption {
+    margin-top: var(--s-12);
+    font-size: 0.875rem;
+    max-width: 46ch;
+  }
+  .p-connector {
+    stroke: var(--muted-on-ink);
+    stroke-width: 2;
+    stroke-dasharray: 4 6;
+  }
+  .p-arrow {
+    fill: none;
+    stroke: var(--muted-on-ink);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .p-box {
+    fill: var(--ink-2);
+    stroke: var(--muted-on-ink);
+    stroke-width: 2;
+  }
+  .p-item {
+    fill: none;
+    stroke: var(--paper);
+    stroke-width: 2;
+  }
+  .p-check {
+    fill: none;
+    stroke: var(--paper);
+    stroke-width: 7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .p-bar {
+    fill: var(--muted-on-ink);
+  }
+  .p-label {
+    fill: var(--paper);
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: 19px;
+    letter-spacing: 0.02em;
+  }
+  .p-record {
+    fill: var(--mint);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .p-record {
+      animation: p-travel 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s 1 both;
+    }
+    @keyframes p-travel {
+      0% {
+        transform: translateX(-228px);
+        opacity: 0;
+      }
+      12% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+  }
+</style>

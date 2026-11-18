@@ -1,0 +1,62 @@
+---
+import type { Experience } from '../data/cv-schema';
+import { formatRange } from '../lib/dates';
+import { getProjectsBySlugs } from '../lib/data';
+import { withBase } from '../lib/url';
+import { projectPath } from '../lib/projects';
+
+interface Props {
+  upcoming: Experience[];
+  past: Experience[];
+  /** Heading level for each entry (h3 on home and CV). */
+  showContribution?: boolean;
+}
+const { upcoming, past, showContribution = true } = Astro.props;
+
+const withProjects = await Promise.all(
+  past.map(async (x) => ({ x, projects: await getProjectsBySlugs(x.projects) })),
+);
+const title = (x: Experience) => [x.role, x.organisation].filter(Boolean).join(', ');
+---
+
+{
+  upcoming.map((x) => (
+    <div class="upcoming-entry">
+      <p class="eyebrow" style="color: var(--teal); margin-bottom: var(--s-4)">Upcoming</p>
+      <h3>{title(x)}</h3>
+      <p class="exp-when" style="margin-bottom: 0">
+        <time datetime={x.start ?? undefined}>{formatRange(x.start, x.end, x.status)}</time>
+        {x.location && <span> · {x.location.replace(/^the /, 'The ')}</span>}
+      </p>
+    </div>
+  ))
+}
+{
+  withProjects.length > 0 && (
+    <ol class="exp-list" reversed>
+      {withProjects.map(({ x, projects }) => {
+        const when = formatRange(x.start, x.end, x.status);
+        return (
+          <li>
+            <p class="exp-when">{when ?? (x.status === 'current' ? 'Current' : 'Completed')}</p>
+            <div>
+              <h3>{title(x)}</h3>
+              {showContribution && x.contribution.map((c) => <p>{c}</p>)}
+              {projects.length > 0 && (
+                <p class="muted" style="font-size: var(--text-small)">
+                  Related:{' '}
+                  {projects.map((p, i) => (
+                    <>
+                      {i > 0 && ', '}
+                      <a href={withBase(projectPath(p))}>{p.data.title}</a>
+                    </>
+                  ))}
+                </p>
+              )}
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+  )
+}

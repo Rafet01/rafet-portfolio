@@ -1,0 +1,47 @@
+---
+import { cv, getProjectsBySlugs } from '../lib/data';
+import { withBase } from '../lib/url';
+import { projectPath } from '../lib/projects';
+
+const groups = await Promise.all(
+  cv.skills.map(async (g) => ({ ...g, projectEntries: await getProjectsBySlugs(g.projects) })),
+);
+---
+
+<ul class="skill-groups">
+  {
+    groups.map((g) => (
+      <li>
+        <h3>{g.label}</h3>
+        <ul>
+          {g.items.map((i) => (
+            <li>{i}</li>
+          ))}
+        </ul>
+        {g.projectEntries.length > 0 && (
+          <p class="supporting muted">
+            Used in:{' '}
+            {g.projectEntries.map((p, i) => (
+              <>
+                {i > 0 && ', '}
+                <a href={withBase(projectPath(p))}>{p.data.title}</a>
+              </>
+            ))}
+          </p>
+        )}
+      </li>
+    ))
+  }
+  {
+    cv.interests.length > 0 && (
+      <li>
+        <h3>Interests</h3>
+        <ul>
+          {cv.interests.map((i) => (
+            <li>{i}</li>
+          ))}
+        </ul>
+      </li>
+    )
+  }
+</ul>

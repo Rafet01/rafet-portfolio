@@ -1,0 +1,84 @@
+---
+import '../styles/global.css';
+import '../styles/print.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { absoluteUrl, withBase } from '../lib/url';
+import { cv } from '../lib/data';
+
+interface Props {
+  /** Page title without the site suffix. Omit for the home page. */
+  title?: string;
+  description: string;
+  /** Path relative to the base, e.g. "projects/vlotterqa/". "" for home. */
+  path: string;
+  /** Emit Person structured data (home and CV). */
+  person?: boolean;
+  /** Exclude from search engines (404). */
+  noindex?: boolean;
+  /** Which header link is current. */
+  current?: 'projects' | 'cv' | 'home';
+  /** Hide site chrome (used nowhere publicly; print hides it via CSS). */
+  bodyClass?: string;
+}
+
+const { title, description, path, person = false, noindex = false, current, bodyClass } = Astro.props;
+const name = cv.identity.name;
+const fullTitle = title ? `${title} | ${name}` : `${name} | Data engineering student`;
+const canonical = absoluteUrl(path, Astro.site);
+const ogImage = absoluteUrl('social/og.png', Astro.site);
+const isPreview = import.meta.env.PUBLIC_PREVIEW === '1';
+const robots = noindex || isPreview ? 'noindex, nofollow' : 'index, follow';
+
+const sameAs = [cv.contacts.linkedin, cv.contacts.github].filter((v): v is string => Boolean(v));
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name,
+  description: cv.identity.headline,
+  url: absoluteUrl('', Astro.site),
+  affiliation: { '@type': 'CollegeOrUniversity', name: cv.education[0]?.school },
+  knowsLanguage: cv.languages.map((l) => l.name),
+  ...(sameAs.length ? { sameAs } : {}),
+  ...(cv.contacts.email ? { email: `mailto:${cv.contacts.email}` } : {}),
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#101923" />
+    <link rel="icon" href={withBase('favicon.svg')} type="image/svg+xml" />
+    <link rel="sitemap" href={withBase('sitemap-index.xml')} />
+    <link rel="preload" href={withBase('fonts/space-grotesk-latin-700-normal.woff2')} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={withBase('fonts/inter-latin-400-normal.woff2')} as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${name}: data engineering student. Source, validate, report.`} />
+    <meta property="og:locale" content="en_GB" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    {person && <script type="application/ld+json" set:html={JSON.stringify(personLd)} />}
+  </head>
+  <body class={bodyClass}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header current={current} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

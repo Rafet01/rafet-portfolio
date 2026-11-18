@@ -1,0 +1,150 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ProjectFigure from '../../components/ProjectFigure.astro';
+import AuthorNotes from '../../components/AuthorNotes.astro';
+import { getPublishedProjects, type Project } from '../../lib/data';
+import { withBase } from '../../lib/url';
+import { projectMeta, projectPath } from '../../lib/projects';
+
+export const getStaticPaths = (async () => {
+  // Drafts never get a route.
+  const projects = await getPublishedProjects();
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+const { data } = project;
+const { Content } = await render(project);
+const hasBody = Boolean(project.body?.trim());
+const meta = projectMeta(project);
+const evidence = data.evidence.filter((e) => e.cleared);
+const hasProblem = Boolean(data.problem || data.audience);
+const hasImplementation = Boolean(data.implementation || data.decision || hasBody);
+const hasResult = Boolean(data.result || evidence.length);
+const isShort = !hasProblem && !hasResult && !hasImplementation;
+---
+
+<Base title={data.title} description={data.seoDescription} path={projectPath(project)} current="projects">
+  <section class="case-header on-ink" aria-labelledby="case-title">
+    <div class="wrap">
+      <p class="breadcrumb"><a href={withBase('projects/')}>← All projects</a></p>
+      <h1 id="case-title">{data.title}</h1>
+      <p class="hero-lead" style="max-width: 46ch">{data.summary}</p>
+      {
+        (data.role || data.result || meta.length > 0) && (
+          <dl class="case-facts">
+            {data.role && (
+              <div>
+                <dt>My role</dt>
+                <dd>{data.role}</dd>
+              </div>
+            )}
+            {data.result && (
+              <div>
+                <dt>Outcome</dt>
+                <dd>{data.result}</dd>
+              </div>
+            )}
+            {meta.length > 0 && (
+              <div>
+                <dt>Context</dt>
+                <dd>{meta.join(' · ')}</dd>
+              </div>
+            )}
+          </dl>
+        )
+      }
+    </div>
+  </section>
+
+  <div class="wrap case-body">
+    <AuthorNotes items={data.missing} />
+
+    {
+      hasProblem && (
+        <section aria-labelledby="problem">
+          <h2 id="problem">Problem and audience</h2>
+          {data.problem && <p>{data.problem}</p>}
+          {data.audience && <p>{data.audience}</p>}
+        </section>
+      )
+    }
+
+    {
+      data.team && (
+        <section aria-labelledby="my-role">
+          <h2 id="my-role">My role and the team</h2>
+          <p>{data.team}</p>
+        </section>
+      )
+    }
+
+    {
+      hasImplementation && (
+        <section aria-labelledby="implementation">
+          <h2 id="implementation">Implementation</h2>
+          {data.implementation && <p>{data.implementation}</p>}
+          {hasBody && <Content />}
+          {data.decision && (
+            <>
+              <h3>One decision</h3>
+              <p>{data.decision}</p>
+            </>
+          )}
+        </section>
+      )
+    }
+
+    {
+      data.stack.length > 0 && (
+        <section aria-labelledby="technology">
+          <h2 id="technology">Technology</h2>
+          <ul class="stack-list">
+            {data.stack.map((s) => (
+              <li>
+                <strong>{s.name}</strong>
+                {s.purpose && <span>: {s.purpose}</span>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      hasResult && (
+        <section aria-labelledby="result">
+          <h2 id="result">Result and evidence</h2>
+          {data.result && <p>{data.result}</p>}
+          {evidence.length > 0 && (
+            <ul>
+              {evidence.map((e) => (
+                <li>
+                  <a href={e.href}>{e.label}</a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      )
+    }
+
+    {
+      data.figure && (
+        <section aria-labelledby="figure">
+          <h2 id="figure">{data.figure.kind === 'diagram' ? 'Diagram' : 'Figure'}</h2>
+          <ProjectFigure figure={data.figure} id={project.id} />
+        </section>
+      )
+    }
+
+    {isShort && <p class="incomplete-note muted">This is a short entry. I add details only once they are confirmed and cleared for publication.</p>}
+
+    <p class="text-link-after"><a href={withBase('projects/')}>Back to all projects</a></p>
+  </div>
+</Base>

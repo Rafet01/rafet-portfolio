@@ -1,0 +1,214 @@
+/* ---------- CV document on screen ---------- */
+.cv-wrap {
+  padding-block: var(--s-48) var(--s-64);
+}
+.cv-doc {
+  max-width: 780px;
+  background: var(--white);
+  border: 1px solid var(--rule-on-paper);
+  border-radius: var(--radius);
+  padding: var(--s-32) var(--s-24);
+}
+@media (min-width: 760px) {
+  .cv-doc {
+    padding: var(--s-48) var(--s-64);
+  }
+}
+.cv-doc h1 {
+  font-size: clamp(2.25rem, 1.8rem + 2vw, 3.25rem);
+  margin-bottom: var(--s-8);
+}
+.cv-headline {
+  font-weight: 600;
+  margin-bottom: var(--s-12);
+}
+.cv-contacts {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--s-16);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4) var(--s-24);
+  font-size: var(--text-small);
+}
+.cv-contacts a {
+  word-break: break-word;
+}
+.cv-download {
+  margin: var(--s-16) 0 0;
+}
+.cv-doc > .cv-download:last-child {
+  margin-top: var(--s-32);
+  font-weight: 600;
+}
+.cv-doc section {
+  margin-top: var(--s-32);
+}
+.cv-doc h2 {
+  font-size: 1.375rem;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: var(--s-4);
+  margin-bottom: var(--s-16);
+}
+.cv-doc h3 {
+  font-size: 1.0625rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  margin-bottom: var(--s-4);
+  letter-spacing: 0;
+}
+.cv-entry + .cv-entry {
+  margin-top: var(--s-16);
+}
+.cv-entry ul,
+.cv-skills {
+  padding-left: 1.2em;
+  margin-bottom: 0;
+}
+.cv-when {
+  color: var(--muted-on-paper);
+  font-size: var(--text-small);
+  margin-bottom: var(--s-4);
+}
+.cv-upcoming {
+  border-left: 4px solid var(--mint);
+  padding-left: var(--s-16);
+}
+.cv-status {
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: var(--s-4);
+}
+
+/* ---------- Print / PDF ---------- */
+@page {
+  size: A4;
+  margin: 17mm 17mm 17mm 17mm;
+}
+
+@media print {
+  :root {
+    --font-heading: Arial, 'Liberation Sans', Helvetica, sans-serif;
+    --font-body: Arial, 'Liberation Sans', Helvetica, sans-serif;
+  }
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-family: Arial, 'Liberation Sans', Helvetica, sans-serif;
+    font-size: 11pt;
+    line-height: 1.35;
+  }
+  .skip-link,
+  .site-header,
+  .site-footer,
+  .no-print,
+  .author-notes,
+  .btn,
+  svg,
+  figure,
+  img {
+    display: none !important;
+  }
+  .wrap,
+  .cv-wrap {
+    max-width: none;
+    padding: 0;
+    margin: 0;
+  }
+  .cv-doc {
+    max-width: none;
+    border: 0;
+    padding: 0;
+    background: none;
+  }
+  .cv-doc * {
+    color: #000 !important;
+    background: none !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+  }
+  .cv-doc h1 {
+    font-size: 20pt;
+    line-height: 1.15;
+    margin: 0 0 2pt;
+  }
+  .cv-headline {
+    font-size: 11pt;
+    margin: 0 0 4pt;
+  }
+  .cv-contacts {
+    font-size: 10.5pt;
+    gap: 0 14pt;
+    margin: 0 0 6pt;
+  }
+  .cv-doc a {
+    text-decoration: none;
+  }
+  .cv-doc section {
+    margin-top: 11pt;
+  }
+  .cv-doc h2 {
+    font-size: 12.5pt;
+    border-bottom: 0.75pt solid #000;
+    padding-bottom: 1pt;
+    margin: 0 0 5pt;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  .cv-doc h3 {
+    font-size: 11pt;
+    margin: 0 0 1pt;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  .cv-doc p,
+  .cv-doc ul {
+    max-width: none;
+    margin: 0 0 3pt;
+  }
+  .cv-when {
+    font-size: 10.5pt;
+    break-after: avoid;
+  }
+  /* Text bullets: real characters in the PDF text layer. */
+  .cv-doc ul {
+    list-style: none;
+    padding-left: 1.1em;
+  }
+  .cv-doc ul > li::before {
+    content: '•';
+    display: inline-block;
+    width: 1.1em;
+    margin-left: -1.1em;
+  }
+  .cv-entry {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .cv-entry + .cv-entry {
+    margin-top: 6pt;
+  }
+  .cv-upcoming {
+    border-left: 0;
+    padding-left: 0;
+  }
+  .cv-status {
+    font-size: 10.5pt;
+    font-weight: 700;
+    margin: 0;
+  }
+  .cv-status::after {
+    content: ':';
+  }
+}
+
+@media print {
+  .cv-doc .cv-contacts > li::before {
+    content: none;
+  }
+}

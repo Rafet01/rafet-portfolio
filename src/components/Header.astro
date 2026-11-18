@@ -1,0 +1,35 @@
+---
+import { withBase } from '../lib/url';
+import { cv } from '../lib/data';
+
+interface Props {
+  current?: 'projects' | 'cv' | 'home' | undefined;
+}
+const { current } = Astro.props;
+
+const links = [
+  { href: withBase('projects/'), label: 'Projects', key: 'projects' },
+  { href: withBase('#about'), label: 'About', key: 'about' },
+  { href: withBase('cv/'), label: 'CV', key: 'cv' },
+  { href: withBase('#contact'), label: 'Contact', key: 'contact' },
+];
+---
+
+<header class="site-header on-ink">
+  <div class="wrap">
+    <a class="site-name" href={withBase()} aria-current={current === 'home' ? 'page' : undefined}>{cv.identity.name}</a>
+    <nav aria-label="Main">
+      <ul>
+        {
+          links.map((l) => (
+            <li>
+              <a href={l.href} aria-current={current === l.key ? 'page' : undefined}>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>

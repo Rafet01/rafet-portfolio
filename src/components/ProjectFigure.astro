@@ -1,0 +1,49 @@
+---
+import { Picture } from 'astro:assets';
+import type { Project } from '../lib/data';
+
+interface Props {
+  figure: NonNullable<Project['data']['figure']>;
+  id: string;
+}
+const { figure, id } = Astro.props;
+
+const LABELS = {
+  illustrative: 'Illustration',
+  reconstruction: 'Reconstruction',
+  synthetic: 'Synthetic data',
+  original: 'Original material',
+} as const;
+const descId = `${id}-figure-desc`;
+---
+
+<figure class="figure">
+  <div class="figure-frame">
+    {
+      figure.kind === 'diagram' && figure.diagram === 'vlotterqa-layers' && (
+        <svg viewBox="0 0 560 250" width="560" height="250" role="img" aria-label={figure.caption} aria-describedby={descId} xmlns="http://www.w3.org/2000/svg">
+          <g style="font-family: var(--font-body); font-size: 17px">
+            <rect x="8" y="10" width="390" height="58" rx="6" fill="#ffffff" stroke="#00664f" stroke-width="2" />
+            <text x="28" y="45" fill="#101923"><tspan font-weight="600">Front end</tspan> · Flutter</text>
+            <line x1="203" y1="68" x2="203" y2="96" stroke="#44535f" stroke-width="2" />
+            <rect x="8" y="96" width="390" height="58" rx="6" fill="#ffffff" stroke="#00664f" stroke-width="2" />
+            <text x="28" y="131" fill="#101923"><tspan font-weight="600">Back end</tspan> · NestJS</text>
+            <line x1="203" y1="154" x2="203" y2="182" stroke="#44535f" stroke-width="2" />
+            <rect x="8" y="182" width="390" height="58" rx="6" fill="#e6eef2" stroke="#44535f" stroke-width="2" />
+            <text x="28" y="217" fill="#101923"><tspan font-weight="600">Database</tspan> · PostgreSQL</text>
+            <path d="M414 14 h14 v136 h-14" fill="none" stroke="#00664f" stroke-width="3" />
+            <text x="440" y="78" fill="#00664f" font-weight="600">My part:</text>
+            <text x="440" y="100" fill="#00664f">front end</text>
+            <text x="440" y="122" fill="#00664f">and back end</text>
+          </g>
+        </svg>
+      )
+    }
+    {figure.kind === 'image' && <Picture src={figure.src} alt={figure.alt} formats={['avif', 'webp']} widths={[480, 760, 1140]} sizes="(min-width: 860px) 760px, 100vw" loading="lazy" decoding="async" />}
+  </div>
+  <figcaption>
+    <span class="figure-label">{LABELS[figure.label]}.</span>
+    {figure.caption}
+    {figure.description && <span id={descId} class="visually-hidden">{figure.description}</span>}
+  </figcaption>
+</figure>

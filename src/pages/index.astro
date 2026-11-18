@@ -1,0 +1,82 @@
+---
+import Base from '../layouts/Base.astro';
+import HeroPipeline from '../components/HeroPipeline.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ExperienceList from '../components/ExperienceList.astro';
+import SkillGroups from '../components/SkillGroups.astro';
+import ContactLinks from '../components/ContactLinks.astro';
+import AuthorNotes from '../components/AuthorNotes.astro';
+import { cv, getProjectsBySlugs, upcomingExperience, pastExperience, upcomingSentence, publicContacts } from '../lib/data';
+import { withBase } from '../lib/url';
+
+const selected = await getProjectsBySlugs(cv.selectedProjects);
+const upcoming = upcomingExperience[0];
+const support = [cv.identity.lead, upcoming ? upcomingSentence(upcoming) : null].filter(Boolean).join(' ');
+const hasContacts = publicContacts().length > 0;
+const description = `${cv.identity.name}: ${cv.identity.headline} ${support}`;
+---
+
+<Base description={description} path="" person current="home">
+  <section class="hero on-ink" aria-labelledby="hero-name">
+    <div class="wrap hero-grid">
+      <div>
+        <h1 id="hero-name">{cv.identity.name}</h1>
+        <p class="hero-lead">{cv.identity.headline}</p>
+        <p class="hero-support muted">{support}</p>
+        <ul class="actions">
+          <li><a class="btn btn-primary" href="#selected-work">View projects</a></li>
+          <li><a class="btn btn-secondary" href={withBase('cv/')}>View CV</a></li>
+        </ul>
+      </div>
+      <HeroPipeline />
+    </div>
+  </section>
+
+  <section id="selected-work" class="section" aria-labelledby="selected-work-title">
+    <div class="wrap">
+      <h2 id="selected-work-title">Selected work</h2>
+      <p class="section-intro muted">Three projects, with my part in each made explicit. Team work is credited as team work.</p>
+      <ul class="card-list card-list-3">
+        {
+          selected.map((p) => (
+            <li>
+              <ProjectCard project={p} />
+            </li>
+          ))
+        }
+      </ul>
+      <p class="text-link-after"><a href={withBase('projects/')}>See all projects, including SAP coursework</a></p>
+    </div>
+  </section>
+
+  <section id="about" class="section section-alt" aria-labelledby="about-title">
+    <div class="wrap">
+      <h2 id="about-title">About</h2>
+      {cv.about.map((p) => <p>{p}</p>)}
+    </div>
+  </section>
+
+  <section id="experience" class="section" aria-labelledby="experience-title">
+    <div class="wrap">
+      <h2 id="experience-title">Experience</h2>
+      <ExperienceList upcoming={upcomingExperience} past={pastExperience} />
+      <p class="text-link-after"><a href={withBase('cv/')}>Full experience and education in my CV</a></p>
+    </div>
+  </section>
+
+  <section id="skills" class="section section-alt" aria-labelledby="skills-title">
+    <div class="wrap">
+      <h2 id="skills-title">Skills</h2>
+      <SkillGroups />
+    </div>
+  </section>
+
+  <section id="contact" class="section" aria-labelledby="contact-title">
+    <div class="wrap">
+      <h2 id="contact-title">Contact</h2>
+      <p>{hasContacts ? 'The quickest way to reach me is by email. My CV is available as a web page and as a PDF.' : 'My CV is available as a web page and as a PDF.'}</p>
+      <ContactLinks />
+      <AuthorNotes items={hasContacts ? [] : ['Contacts (email, LinkedIn, GitHub) are not set in src/data/cv.json. Launch blocker.']} />
+    </div>
+  </section>
+</Base>

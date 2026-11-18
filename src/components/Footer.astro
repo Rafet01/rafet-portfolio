@@ -1,0 +1,19 @@
+---
+import { withBase, CV_PDF_PATH, CV_PDF_FILENAME } from '../lib/url';
+import { cv } from '../lib/data';
+---
+
+<footer class="site-footer on-ink">
+  <div class="wrap">
+    <p>© {new Date().getFullYear()} {cv.identity.name}</p>
+    <nav aria-label="Footer">
+      <ul>
+        <li><a href={withBase()}>Home</a></li>
+        <li><a href={withBase('projects/')}>Projects</a></li>
+        <li><a href={withBase('cv/')}>CV</a></li>
+        <li><a href={withBase(CV_PDF_PATH)} download={CV_PDF_FILENAME}>CV (PDF)</a></li>
+        <li><a href={withBase('#contact')}>Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</footer>

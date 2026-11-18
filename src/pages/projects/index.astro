@@ -1,0 +1,73 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getPublishedProjects } from '../../lib/data';
+import { withBase } from '../../lib/url';
+import { projectMeta, projectPath } from '../../lib/projects';
+import { getCollection } from 'astro:content';
+
+const projects = await getPublishedProjects();
+const groups = ['Client and internship work', 'SAP coursework'] as const;
+const byGroup = groups.map((g) => ({
+  title: g,
+  id: g.toLowerCase().replace(/[^a-z]+/g, '-'),
+  items: projects.filter((p) => p.data.group === g),
+}));
+// Planned work is described in one line, without a link, until it has a reproducible result.
+const planned = (await getCollection('projects')).filter((p) => p.data.status === 'draft' && p.data.context === 'independent');
+---
+
+<Base
+  title="Projects"
+  description="Client, internship and SAP coursework projects by Rafet Myumyun, with his role in each made explicit."
+  path="projects/"
+  current="projects"
+>
+  <section class="case-header on-ink" aria-labelledby="projects-title">
+    <div class="wrap">
+      <h1 id="projects-title">Projects</h1>
+      <p class="hero-support muted">Client and internship work first, then SAP coursework. Each project has its own page.</p>
+    </div>
+  </section>
+
+  <div class="wrap case-body">
+    {
+      byGroup.map((g) => (
+        <section aria-labelledby={g.id}>
+          <h2 id={g.id}>{g.title}</h2>
+          <ol class="project-index">
+            {g.items.map((p) => {
+              const meta = projectMeta(p);
+              return (
+                <li>
+                  <h3>
+                    <a href={withBase(projectPath(p))}>{p.data.title}</a>
+                  </h3>
+                  {meta.length > 0 && <p class="card-meta muted">{meta.join(' · ')}</p>}
+                  <p>{p.data.summary}</p>
+                  {p.data.role && (
+                    <p>
+                      <strong>My role:</strong> {p.data.role}
+                    </p>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+      ))
+    }
+    {
+      planned.length > 0 && (
+        <section aria-labelledby="planned">
+          <h2 id="planned">Planned</h2>
+          {planned.map((p) => (
+            <p class="planned">
+              <span class="status-label">Planned</span>
+              {p.data.summary.replace(/^Planned:\s*/, '').replace(/^./, (c) => c.toUpperCase())}
+            </p>
+          ))}
+        </section>
+      )
+    }
+  </div>
+</Base>

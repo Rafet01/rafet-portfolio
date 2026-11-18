@@ -1,0 +1,38 @@
+---
+import type { Project } from '../lib/data';
+import { withBase } from '../lib/url';
+import { projectMeta, caseLinkText, projectPath } from '../lib/projects';
+
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+const { data } = project;
+const meta = projectMeta(project);
+const headingId = `card-${project.id}`;
+---
+
+<article class="card" aria-labelledby={headingId}>
+  <h3 id={headingId}>{data.title}</h3>
+  {meta.length > 0 && <p class="card-meta muted">{meta.join(' · ')}</p>}
+  <p>{data.summary}</p>
+  {
+    data.role && (
+      <div class="card-role">
+        <strong>My role</strong>
+        {data.role}
+      </div>
+    )
+  }
+  {data.team && <p class="card-meta muted" style="margin-top: var(--s-12)">{data.team}</p>}
+  {
+    data.stack.length > 0 && (
+      <ul class="card-tags" aria-label="Technology">
+        {data.stack.map((s) => (
+          <li>{s.name}</li>
+        ))}
+      </ul>
+    )
+  }
+  <p class="card-link"><a href={withBase(projectPath(project))}>{caseLinkText(project)}</a></p>
+</article>

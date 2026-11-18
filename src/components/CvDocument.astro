@@ -1,0 +1,166 @@
+---
+/**
+ * The single semantic CV document. Supplies content and reading order for both /cv/ and the PDF.
+ * Everything is real text in logical order: employer or school, role, date, contribution.
+ */
+import { cv, getPublishedProjects, publicContacts, upcomingExperience, pastExperience } from '../lib/data';
+import { formatRange } from '../lib/dates';
+import { withBase, absoluteUrl, CV_PDF_PATH, CV_PDF_FILENAME } from '../lib/url';
+import { projectMeta, projectPath } from '../lib/projects';
+
+const projects = await getPublishedProjects();
+const featured = cv.selectedProjects
+  .map((s) => projects.find((p) => p.id === s))
+  .filter((p): p is NonNullable<typeof p> => Boolean(p));
+const others = projects.filter((p) => !cv.selectedProjects.includes(p.id));
+// Non-coursework projects get their own entry; SAP coursework is grouped into one compact entry.
+const ordered = [...featured, ...others.filter((p) => p.data.context !== 'coursework')];
+const coursework = others.filter((p) => p.data.context === 'coursework');
+
+const contacts = publicContacts();
+const site = Astro.site?.href ?? '';
+const portfolioUrl = /localhost|127\.0\.0\.1/.test(site) ? null : absoluteUrl('', Astro.site);
+const roleOrg = (role: string | null, org: string | null) => [role, org].filter(Boolean).join(', ');
+const download = { href: withBase(CV_PDF_PATH), download: CV_PDF_FILENAME };
+---
+
+<article class="cv-doc" aria-labelledby="cv-name">
+  <header class="cv-head">
+    <h1 id="cv-name">{cv.identity.name}</h1>
+    <p class="cv-headline">{cv.identity.headline}</p>
+    {
+      (contacts.length > 0 || portfolioUrl) && (
+        <ul class="cv-contacts">
+          {contacts.map((c) => (
+            <li>
+              {c.label}: <a href={c.href}>{c.text}</a>
+            </li>
+          ))}
+          {portfolioUrl && (
+            <li>
+              Portfolio: <a href={portfolioUrl}>{portfolioUrl.replace(/^https:\/\//, '').replace(/\/$/, '')}</a>
+            </li>
+          )}
+        </ul>
+      )
+    }
+    <p class="cv-download no-print"><a class="btn btn-primary" {...download}>Download CV (PDF)</a></p>
+  </header>
+
+  <section aria-labelledby="cv-summary">
+    <h2 id="cv-summary">Summary</h2>
+    <p>{cv.summary}</p>
+  </section>
+
+  <section aria-labelledby="cv-experience">
+    <h2 id="cv-experience">Experience</h2>
+    {
+      upcomingExperience.map((x) => (
+        <div class="cv-entry cv-upcoming">
+          <p class="cv-status">Upcoming</p>
+          <h3>{roleOrg(x.role, x.organisation)}{x.location ? `, ${x.location}` : ''}</h3>
+          <p class="cv-when">
+            <time datetime={x.start ?? undefined}>{formatRange(x.start, x.end, x.status)}</time>
+          </p>
+        </div>
+      ))
+    }
+    {
+      pastExperience.map((x) => {
+        const when = formatRange(x.start, x.end, x.status);
+        return (
+          <div class="cv-entry">
+            <h3>{roleOrg(x.role, x.organisation)}</h3>
+            {when && <p class="cv-when">{when}</p>}
+            {x.contribution.length > 0 && (
+              <ul>
+                {x.contribution.map((c) => (
+                  <li>{c}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        );
+      })
+    }
+  </section>
+
+  <section aria-labelledby="cv-education">
+    <h2 id="cv-education">Education</h2>
+    {
+      cv.education.map((e) => {
+        const when = formatRange(e.start, e.end, e.status);
+        return (
+          <div class="cv-entry">
+            <h3>{e.programme}, {e.school}</h3>
+            {(e.note || when) && <p class="cv-when">{[e.note, when].filter(Boolean).join(' · ')}</p>}
+          </div>
+        );
+      })
+    }
+  </section>
+
+  <section aria-labelledby="cv-projects">
+    <h2 id="cv-projects">Projects</h2>
+    {
+      ordered.map((p) => {
+        const meta = projectMeta(p);
+        return (
+          <div class="cv-entry">
+            <h3>
+              <a href={withBase(projectPath(p))}>{p.data.title}</a>
+            </h3>
+            {meta.length > 0 && <p class="cv-when">{meta.join(' · ')}</p>}
+            <ul>
+              <li>{p.data.summary}</li>
+              {p.data.role && <li>{p.data.role}</li>}
+              {p.data.team && <li>Team project.</li>}
+              {p.data.stack.length > 0 && <li>Technology: {p.data.stack.map((s) => s.name).join(', ')}</li>}
+            </ul>
+          </div>
+        );
+      })
+    }
+    {
+      coursework.length > 0 && (
+        <div class="cv-entry">
+          <h3>SAP coursework, {coursework[0]?.data.organisation}</h3>
+          <ul>
+            {coursework.map((p) => (
+              <li>
+                <a href={withBase(projectPath(p))}>{p.data.title}</a>: {p.data.summary}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+  </section>
+
+  <section aria-labelledby="cv-skills">
+    <h2 id="cv-skills">Skills</h2>
+    <ul class="cv-skills">
+      {
+        cv.skills.map((g) => (
+          <li>
+            <strong>{g.label}:</strong> {g.items.join(', ')}
+          </li>
+        ))
+      }
+      {
+        cv.interests.length > 0 && (
+          <li>
+            <strong>Interests:</strong> {cv.interests.join(', ')}
+          </li>
+        )
+      }
+    </ul>
+  </section>
+
+  <section aria-labelledby="cv-languages">
+    <h2 id="cv-languages">Languages</h2>
+    <p>{cv.languages.map((l) => (l.level ? `${l.name} (${l.level})` : l.name)).join(', ')}</p>
+  </section>
+
+  <p class="cv-download no-print"><a {...download}>Download CV (PDF)</a></p>
+</article>

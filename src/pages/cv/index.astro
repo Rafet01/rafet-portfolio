@@ -1,0 +1,18 @@
+---
+import Base from '../../layouts/Base.astro';
+import CvDocument from '../../components/CvDocument.astro';
+import { cv } from '../../lib/data';
+---
+
+<Base
+  title="CV"
+  description={`CV of ${cv.identity.name}: final-year Applied Computer Science student focused on data engineering. Experience, education, projects, skills and languages.`}
+  path="cv/"
+  person
+  current="cv"
+  bodyClass="page-cv"
+>
+  <div class="wrap cv-wrap">
+    <CvDocument />
+  </div>
+</Base>

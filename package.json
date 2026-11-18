@@ -1,0 +1,33 @@
+{
+  "name": "rafet-portfolio",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "validate": "node scripts/validate-data.mjs",
+    "check": "astro check",
+    "build:site": "astro build",
+    "build:pdf": "node scripts/generate-cv.mjs",
+    "verify": "node scripts/verify-build.mjs",
+    "build": "npm run validate && npm run check && npm run build:site && npm run build:pdf && npm run verify",
+    "preview": "node scripts/preview.mjs",
+    "test:parity": "node scripts/parity-test.mjs",
+    "social": "node scripts/generate-social.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "3.7.5",
+    "astro": "7.4.12"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "@fontsource/inter": "5.3.0",
+    "@fontsource/space-grotesk": "5.3.0",
+    "playwright": "1.65.1",
+    "typescript": "6.0.3",
+    "yaml": "2.9.1"
+  }
+}

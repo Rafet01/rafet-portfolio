@@ -1,0 +1,85 @@
+/* Design tokens — "Pipeline" direction */
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-latin-500-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-latin-700-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/inter-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/inter-latin-600-normal.woff2') format('woff2');
+}
+
+:root {
+  /* Colour */
+  --ink: #101923;
+  --ink-2: #1a2735;
+  --paper: #f4f8fa;
+  --paper-2: #e6eef2;
+  --white: #ffffff;
+  --muted-on-ink: #b7c5cf;
+  --muted-on-paper: #44535f;
+  --mint: #6ee7be;
+  --teal: #00664f;
+  --teal-hover: #004d3b;
+  --rule-on-ink: #33475a;
+  --rule-on-paper: #c9d6de;
+  --focus-on-paper: #00664f;
+  --focus-on-ink: #6ee7be;
+
+  /* Type */
+  --font-heading: 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --text-body: clamp(1rem, 0.96rem + 0.18vw, 1.125rem); /* 16 → 18px */
+  --text-small: 0.9375rem;
+  --text-lead: clamp(1.1875rem, 1.05rem + 0.6vw, 1.5rem);
+  --text-h1: clamp(2.75rem, 1.9rem + 3.6vw, 5rem); /* 44 → 80px */
+  --text-h2: clamp(1.75rem, 1.45rem + 1.2vw, 2.5rem);
+  --text-h3: clamp(1.1875rem, 1.1rem + 0.35vw, 1.375rem);
+  --leading: 1.55;
+  --measure: 66ch;
+
+  /* Space */
+  --s-4: 4px;
+  --s-8: 8px;
+  --s-12: 12px;
+  --s-16: 16px;
+  --s-24: 24px;
+  --s-32: 32px;
+  --s-48: 48px;
+  --s-64: 64px;
+  --s-96: 96px;
+
+  /* Layout */
+  --page-max: 1120px;
+  --gutter: 20px;
+  --radius: 6px;
+  --touch: 44px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --t-fast: 140ms;
+}
+
+@media (min-width: 760px) {
+  :root {
+    --gutter: 48px;
+  }
+}
